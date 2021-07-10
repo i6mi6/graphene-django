@@ -160,10 +160,10 @@ def convert_field_to_boolean(field, registry=None):
     return Boolean(description=field.help_text, required=not field.null)
 
 
- @convert_form_field.register(forms.DecimalField) 
- @convert_form_field.register(forms.FloatField) 
- def convert_form_field_to_float(field): 
-     return Float(description=field.help_text, required=field.required) 
+@convert_form_field.register(forms.DecimalField) 
+@convert_form_field.register(forms.FloatField) 
+def convert_form_field_to_float(field): 
+    return Float(description=field.help_text, required=field.required) 
 
 
 @convert_django_field.register(models.FloatField)
