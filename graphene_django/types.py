@@ -22,9 +22,9 @@ ALL_FIELDS = "__all__"
 
 
 def construct_fields(
-    model, registry, only_fields, exclude_fields, convert_choices_to_enum
+    model, registry, only_fields, exclude_fields, convert_choices_to_enum, alias_fields=None
 ):
-    _model_fields = get_model_fields(model)
+    _model_fields = get_model_fields(model, alias_fields=alias_fields)
 
     fields = OrderedDict()
     for name, field in _model_fields:
@@ -149,6 +149,7 @@ class DjangoObjectType(ObjectType):
         interfaces=(),
         convert_choices_to_enum=True,
         _meta=None,
+        alias_fields=None,
         **options
     ):
         assert is_valid_django_model(model), (
@@ -222,7 +223,7 @@ class DjangoObjectType(ObjectType):
             )
 
         django_fields = yank_fields_from_attrs(
-            construct_fields(model, registry, fields, exclude, convert_choices_to_enum),
+            construct_fields(model, registry, fields, exclude, convert_choices_to_enum, alias_fields=alias_fields),
             _as=graphene.Field,
         )
 
