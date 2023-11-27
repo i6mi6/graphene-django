@@ -57,20 +57,23 @@ def maybe_queryset(value):
     return value
 
 
-def get_model_fields(model):
+
+def get_model_fields(model, alias_fields=None):
     local_fields = [
-        (field.name, field)
+        (field.name, field) 
         for field in sorted(
             list(model._meta.fields) + list(model._meta.local_many_to_many)
         )
     ]
-
     # Make sure we don't duplicate local fields with "reverse" version
     local_field_names = [field[0] for field in local_fields]
     reverse_fields = get_reverse_fields(model, local_field_names)
-
     all_fields = local_fields + list(reverse_fields)
-
+    if alias_fields:
+        for key in alias_fields:
+            field = next((i for i in all_fields if i[0] == key), None)
+            if field:
+                all_fields.append((alias_fields[key], field[1]))
     return all_fields
 
 
